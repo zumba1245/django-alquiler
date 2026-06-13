@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes - Alquiler de Películas{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Clientes</h2>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <a class="btn secondary" href="{% url 'tienda:cliente_export_csv' %}">Exportar CSV</a>
+                <a class="btn secondary" href="{% url 'tienda:cliente_import_csv' %}">Importar CSV</a>
+                <a class="btn" href="{% url 'tienda:cliente_create' %}">Nuevo cliente</a>
+            </div>
+        </div>
+        <div style="margin-top: 12px">
+            {% include "tienda/_list_controls.html" %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th style="width: 220px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.nombre }}</td>
+                            <td>{{ cliente.email|default_if_none:"" }}</td>
+                            <td>{{ cliente.telefono|default_if_none:"" }}</td>
+                            <td class="actions">
+                                <a class="btn" href="{% url 'tienda:cliente_detail' cliente.pk %}">Ver</a>
+                                <a class="btn secondary" href="{% url 'tienda:cliente_update' cliente.pk %}?next={{ request.get_full_path|urlencode }}">Editar</a>
+                                <a class="btn danger" href="{% url 'tienda:cliente_delete' cliente.pk %}?next={{ request.get_full_path|urlencode }}">Borrar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="help">No hay clientes todavía.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

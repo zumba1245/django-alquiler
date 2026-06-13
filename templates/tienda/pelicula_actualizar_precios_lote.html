@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Actualizar precios por categoría{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Actualizar precios por categoría (lote)</h2>
+        <p class="help" style="margin-top: 0">
+            Este formulario cambiará el precio de alquiler de todas las películas de la categoría elegida.
+        </p>
+
+        {% if actualizados %}
+            <div class="card" style="background: #f0fdf4; border-color: #bbf7d0">
+                <strong>Actualización completada</strong><br />
+                Categoría: {{ categoria.nombre }}<br />
+                Nuevo precio: {{ nuevo_precio|soles }}<br />
+                Películas actualizadas: {{ actualizados }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <p>
+                {{ form.categoria.label_tag }}<br />
+                {{ form.categoria }}<br />
+                <span class="help">{{ form.categoria.help_text }}</span>
+                {{ form.categoria.errors }}
+            </p>
+            <p>
+                {{ form.nuevo_precio.label_tag }}<br />
+                {{ form.nuevo_precio }}<br />
+                <span class="help">{{ form.nuevo_precio.help_text }}</span>
+                {{ form.nuevo_precio.errors }}
+            </p>
+            <button class="btn" type="submit">Actualizar precios</button>
+            <a class="btn secondary" href="{% url 'tienda:pelicula_list' %}" style="margin-left: 8px">Volver</a>
+        </form>
+    </div>
+{% endblock %}

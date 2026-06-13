@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Marcar pagado{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Marcar como pagado</h2>
+
+        <p style="margin-top: 0">
+            <b>Cliente:</b> {{ alquiler.cliente.nombre }}<br />
+            <b>Película:</b> {{ alquiler.pelicula.titulo }} ({{ alquiler.pelicula.anio }})<br />
+            <b>Categoría:</b> {{ alquiler.pelicula.categoria.nombre }}<br />
+            <b>Precio:</b> {{ alquiler.precio|soles }}
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}" />{% endif %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Confirmar pago</button>
+            {% if next_url %}
+                <a class="btn secondary" href="{{ next_url }}" style="margin-left: 8px">Volver</a>
+            {% else %}
+                <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}" style="margin-left: 8px">Volver</a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+

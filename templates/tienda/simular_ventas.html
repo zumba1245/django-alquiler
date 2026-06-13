@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Simular ventas{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Simular ventas</h2>
+        <p class="help" style="margin-top: 0">
+            Esta simulación crea alquileres y los marca como pagados. Es ideal para practicar consultas y estadísticas.
+        </p>
+
+        {% if error %}
+            <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 8px; margin-bottom: 12px">
+                <b>Atención:</b> {{ error }}
+            </div>
+        {% endif %}
+
+        {% if resumen %}
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px">
+                <b>Resumen de simulación</b><br />
+                Solicitadas: {{ resumen.solicitadas }}<br />
+                Creadas: {{ resumen.creadas }}<br />
+                Omitidas: {{ resumen.omitidas }}<br />
+                Rango: {{ resumen.desde }} a {{ resumen.hasta }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Generar ventas</button>
+            <a class="btn secondary" href="{% url 'tienda:ventas_list' %}" style="margin-left: 8px">Volver</a>
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Detalle de película{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Detalle de película</h2>
+        <p><strong>Título:</strong> {{ pelicula.titulo }}</p>
+        <p><strong>Categoría:</strong> {{ pelicula.categoria.nombre }}</p>
+        <p><strong>Año:</strong> {{ pelicula.anio }}</p>
+        <p><strong>Precio actual:</strong> {{ pelicula.precio_alquiler|soles }}</p>
+        <p><strong>Stock actual:</strong> {{ pelicula.stock }}</p>
+
+        <h3 style="margin-bottom: 8px">Métricas</h3>
+        <p><strong>Veces alquilada:</strong> {{ veces_alquilada }}</p>
+        <p><strong>Veces pagada:</strong> {{ veces_pagada }}</p>
+        <p><strong>Ingresos generados:</strong> {{ ingresos_generados|soles }}</p>
+        <a class="btn secondary" href="{% url 'tienda:pelicula_list' %}">Volver</a>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0">Historial de alquileres</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Método de pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alquiler in historial_alquileres %}
+                    <tr>
+                        <td>{{ alquiler.fecha_alquiler }}</td>
+                        <td>{{ alquiler.cliente.nombre }}</td>
+                        <td>{{ alquiler.get_estado_display }}</td>
+                        <td>{{ alquiler.precio|soles }}</td>
+                        <td>{{ alquiler.metodo_pago.nombre|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="help">Esta película aún no tiene alquileres.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

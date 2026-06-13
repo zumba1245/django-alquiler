@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Ventas</h2>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                {% if can_simular_ventas %}
+                    <a class="btn secondary" href="{% url 'tienda:ventas_simular' %}">Simular ventas</a>
+                {% endif %}
+                {% if caja_cerrada_hoy %}
+                    <span class="btn secondary" style="opacity: .85; cursor: default;">Caja {{ caja_fecha_hoy }} cerrada</span>
+                {% else %}
+                    <form method="post" action="{% url 'tienda:ventas_cerrar_caja' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="btn danger" type="submit">Cerrar caja hoy</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if caja_cerrada_hoy %}
+            <div style="margin-top: 12px; background: #fef3c7; border: 1px solid #fcd34d; padding: 10px; border-radius: 8px;">
+                La caja de hoy está cerrada. No se pueden registrar nuevas ventas hoy.
+            </div>
+        {% endif %}
+
+        <div style="margin-top: 12px">
+            <form method="get" style="margin-bottom: 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                <div>
+                    {{ filter_form.desde.label_tag }}<br>
+                    {{ filter_form.desde }}
+                </div>
+                <div>
+                    {{ filter_form.hasta.label_tag }}<br>
+                    {{ filter_form.hasta }}
+                </div>
+                <div>
+                    <button class="btn" type="submit">Filtrar</button>
+                    <a class="btn secondary" href="{% url 'tienda:ventas_list' %}">Limpiar</a>
+                </div>
+                <div style="flex: 1 1 100%; color: #dc2626;">
+                    {{ filter_form.non_field_errors }}
+                </div>
+            </form>
+
+            <p style="margin: 0 0 12px 0">
+                <b>Ingresos totales:</b> {{ total_ingresos|soles }}
+            </p>
+
+            {% include "tienda/_list_controls.html" %}
+
+            {% if ventas_por_dia %}
+                <div class="card" style="margin-bottom: 18px;">
+                    <h3 style="margin-top: 0;">Total de ventas por día</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dia in ventas_por_dia %}
+                                <tr>
+                                    <td>{{ dia.fecha }}</td>
+                                    <td>{{ dia.total|soles }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Película</th>
+                        <th>Categoría</th>
+                        <th>Método pago</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                        <tr>
+                            <td>{{ venta.fecha_alquiler }}</td>
+                            <td>{{ venta.cliente.nombre }}</td>
+                            <td>{{ venta.pelicula.titulo }} ({{ venta.pelicula.anio }})</td>
+                            <td>{{ venta.pelicula.categoria.nombre }}</td>
+                            <td>{{ venta.metodo_pago|default:"-" }}</td>
+                            <td>{{ venta.precio|soles }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="help">Todavía no hay ventas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Papelera{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Papelera (borrado lógico)</h2>
+        <p class="help">Desde aquí puedes restaurar registros desactivados.</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0">Categorías eliminadas</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in categorias_eliminadas %}
+                    <tr>
+                        <td>{{ item.nombre }}</td>
+                        <td>
+                            <form method="post" action="{% url 'tienda:categoria_restore' item.pk %}">
+                                {% csrf_token %}
+                                <button class="btn" type="submit">Restaurar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="2" class="help">No hay categorías eliminadas.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0">Clientes eliminados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>DNI</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in clientes_eliminados %}
+                    <tr>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.dni }}</td>
+                        <td>
+                            <form method="post" action="{% url 'tienda:cliente_restore' item.pk %}">
+                                {% csrf_token %}
+                                <button class="btn" type="submit">Restaurar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3" class="help">No hay clientes eliminados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0">Películas eliminadas</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Año</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in peliculas_eliminadas %}
+                    <tr>
+                        <td>{{ item.titulo }}</td>
+                        <td>{{ item.anio }}</td>
+                        <td>
+                            <form method="post" action="{% url 'tienda:pelicula_restore' item.pk %}">
+                                {% csrf_token %}
+                                <button class="btn" type="submit">Restaurar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3" class="help">No hay películas eliminadas.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0">Métodos de pago eliminados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in metodos_pago_eliminados %}
+                    <tr>
+                        <td>{{ item.nombre }}</td>
+                        <td>
+                            <form method="post" action="{% url 'tienda:metodo_pago_restore' item.pk %}">
+                                {% csrf_token %}
+                                <button class="btn" type="submit">Restaurar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="2" class="help">No hay métodos de pago eliminados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

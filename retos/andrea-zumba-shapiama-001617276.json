@@ -1,0 +1,70 @@
+{
+  "alumno": "Andrea Zumba Shapiama",
+  "codigo": "001617276",
+  "token_entrega": "9E5F4A9510AD",
+  "generado_en_utc": "2026-03-31T14:38:39.390011+00:00",
+  "reglas_entrega": {
+    "rama_git_obligatoria": "alumno/andrea-zumba-shapiama-9e5f",
+    "nombre_archivo_reflexion": "REFLEXION_9E5F4A9510AD.md",
+    "incluir_token_en_readme": true,
+    "incluir_token_en_commit_final": true
+  },
+  "parametros_unicos": {
+    "stock_minimo_pelicula": 4,
+    "mora_por_dia_soles": 4,
+    "limite_alquileres_pendientes": 6,
+    "dias_maximo_retraso": 7,
+    "prefijo_slug_obligatorio": "andrea-77"
+  },
+  "retos_asignados": [
+    {
+      "id": 1,
+      "titulo": "Reto Django #1"
+    },
+    {
+      "id": 2,
+      "titulo": "Reto Django #2"
+    },
+    {
+      "id": 7,
+      "titulo": "Reto Django #7"
+    },
+    {
+      "id": 17,
+      "titulo": "Reto Django #17"
+    },
+    {
+      "id": 19,
+      "titulo": "Reto Django #19"
+    },
+    {
+      "id": 20,
+      "titulo": "Reto Django #20"
+    },
+    {
+      "id": 31,
+      "titulo": "Reto Django #31"
+    },
+    {
+      "id": 68,
+      "titulo": "Reto Django #68"
+    },
+    {
+      "id": 76,
+      "titulo": "Reto Django #76"
+    },
+    {
+      "id": 83,
+      "titulo": "Reto Django #83"
+    },
+    {
+      "id": 87,
+      "titulo": "Reto Django #87"
+    },
+    {
+      "id": 96,
+      "titulo": "Reto Django #96"
+    }
+  ],
+  "instruccion_docente": "Pide al alumno que implemente solo estos retos. Si otro repo tiene token o parámetros distintos, se considera copia."
+}

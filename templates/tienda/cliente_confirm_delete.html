@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Desactivar cliente{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Desactivar cliente</h2>
+        <p>
+            ¿Seguro que quieres desactivar <b>{{ object.nombre }}</b>?
+        </p>
+        <p class="help">Se ocultará de los listados, pero podrás restaurarlo desde la papelera.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}" />{% endif %}
+            <button class="btn danger" type="submit">Desactivar</button>
+            {% if next_url %}
+                <a class="btn secondary" href="{{ next_url }}" style="margin-left: 8px">Cancelar</a>
+            {% else %}
+                <a class="btn secondary" href="{% url 'tienda:cliente_list' %}" style="margin-left: 8px">Cancelar</a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,47 @@
+[
+  {
+    "model": "tienda.categoria",
+    "pk": 1,
+    "fields": {
+      "nombre": "Fixture Accion",
+      "descripcion": "Categoria base para pruebas repetibles.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "tienda.cliente",
+    "pk": 1,
+    "fields": {
+      "nombre": "Cliente Fixture",
+      "dni": "80808080",
+      "email": "fixture-cliente@example.com",
+      "telefono": "999111222",
+      "is_active": true
+    }
+  },
+  {
+    "model": "tienda.metodopago",
+    "pk": 1,
+    "fields": {
+      "nombre": "Fixture Efectivo",
+      "descripcion": "Metodo base para pruebas.",
+      "is_active": true
+    }
+  },
+  {
+    "model": "tienda.pelicula",
+    "pk": 1,
+    "fields": {
+      "titulo": "Fixture Pelicula Principal",
+      "slug": "fixture-pelicula-principal",
+      "director": "Director Fixture",
+      "pais_origen": "PE",
+      "anio": 2020,
+      "categoria": 1,
+      "precio_alquiler": "14.50",
+      "duracion_minutos": 105,
+      "stock": 3,
+      "is_active": true
+    }
+  }
+]

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Películas - Alquiler de Películas{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Películas</h2>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <a class="btn secondary" href="{% url 'tienda:pelicula_actualizar_precios_lote' %}">Precios por categoría</a>
+                <a class="btn" href="{% url 'tienda:pelicula_create' %}">Nueva película</a>
+            </div>
+        </div>
+
+        <div style="margin-top: 12px">
+            <form method="get" style="margin-bottom: 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                <div>
+                    {{ filter_form.anio.label_tag }}<br />
+                    {{ filter_form.anio }}
+                </div>
+                <div>
+                    {{ filter_form.categoria.label_tag }}<br />
+                    {{ filter_form.categoria }}
+                </div>
+                <div>
+                    {{ filter_form.precio_min.label_tag }}<br />
+                    {{ filter_form.precio_min }}
+                </div>
+                <div>
+                    {{ filter_form.precio_max.label_tag }}<br />
+                    {{ filter_form.precio_max }}
+                </div>
+                <div>
+                    <button class="btn" type="submit">Filtrar</button>
+                    <a class="btn secondary" href="{% url 'tienda:pelicula_list' %}">Limpiar</a>
+                </div>
+                <div style="flex: 1 1 100%; color: #dc2626;">
+                    {{ filter_form.non_field_errors }}
+                </div>
+            </form>
+        </div>
+
+        <div style="margin-top: 12px">
+            {% include "tienda/_list_controls.html" %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Director</th>
+                        <th>País origen</th>
+                        <th>Categoría</th>
+                        <th>Año</th>
+                        <th>Duración</th>
+                        <th>Precio alquiler</th>
+                        <th style="width: 220px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pelicula in peliculas %}
+                        <tr>
+                            <td>{{ pelicula.titulo }}</td>
+                            <td>{{ pelicula.director|default:"-" }}</td>
+                            <td>{{ pelicula.pais_origen|default:"-" }}</td>
+                            <td>{{ pelicula.categoria.nombre }}</td>
+                            <td>{{ pelicula.anio }}</td>
+                            <td>{{ pelicula.duracion_minutos }} min</td>
+                            <td>{{ pelicula.precio_alquiler|soles }}</td>
+                            <td class="actions">
+                                <a class="btn" href="{% url 'tienda:pelicula_detail' pelicula.pk %}">Ver</a>
+                                <a class="btn secondary" href="{% url 'tienda:pelicula_update' pelicula.pk %}?next={{ request.get_full_path|urlencode }}">Editar</a>
+                                <a class="btn danger" href="{% url 'tienda:pelicula_delete' pelicula.pk %}?next={{ request.get_full_path|urlencode }}">Borrar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="help">No hay películas todavía.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block title %}Alquiler de Películas{% endblock %}</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+                background: #f7f7f7;
+                color: #222;
+            }
+            header {
+                background: #111827;
+                color: #fff;
+                padding: 14px 18px;
+            }
+            nav a {
+                color: #e5e7eb;
+                text-decoration: none;
+                margin-right: 14px;
+            }
+            nav a:hover {
+                text-decoration: underline;
+            }
+            .container {
+                padding: 18px;
+                max-width: 980px;
+                margin: 0 auto;
+            }
+            .card {
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 14px;
+                margin-bottom: 14px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th,
+            td {
+                padding: 10px;
+                border-bottom: 1px solid #e5e7eb;
+                text-align: left;
+                vertical-align: top;
+            }
+            .row {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .row .card {
+                flex: 1 1 220px;
+                margin-bottom: 0;
+            }
+            .actions a,
+            .actions button {
+                margin-right: 8px;
+            }
+            .btn {
+                display: inline-block;
+                background: #2563eb;
+                color: #fff;
+                padding: 8px 12px;
+                border-radius: 6px;
+                border: none;
+                text-decoration: none;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            .btn.secondary {
+                background: #4b5563;
+            }
+            .btn.danger {
+                background: #dc2626;
+            }
+            input[type="date"],
+            input[type="number"],
+            input[type="text"],
+            input[type="email"],
+            select,
+            textarea {
+                padding: 8px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            label {
+                font-weight: bold;
+            }
+            .help {
+                color: #6b7280;
+                font-size: 13px;
+            }
+            .errorlist {
+                color: #dc2626;
+                margin: 0 0 10px 0;
+                padding-left: 18px;
+            }
+            .list-toolbar {
+                background: #f8fafc;
+                border: 1px solid #dbe4f0;
+                border-radius: 10px;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            .list-toolbar-form {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                align-items: end;
+            }
+            .list-toolbar-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-width: 220px;
+                flex: 1 1 240px;
+            }
+            .list-toolbar-group.compact {
+                min-width: 140px;
+                flex: 0 1 160px;
+            }
+            .list-toolbar-ordering {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                flex: 1 1 460px;
+            }
+            .toolbar-label {
+                color: #475569;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+            }
+            .toolbar-select {
+                background: #fff;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                padding: 9px 10px;
+                color: #0f172a;
+            }
+            .toolbar-note {
+                color: #64748b;
+                font-size: 12px;
+                margin-top: 4px;
+            }
+            .toolbar-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-left: auto;
+            }
+            .pagination-bar {
+                margin-top: 12px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                background: #f8fafc;
+                border: 1px solid #dbe4f0;
+                border-radius: 10px;
+                padding: 10px 12px;
+            }
+            .pagination-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+            .pagination-status {
+                color: #475569;
+                font-size: 13px;
+            }
+            .compact-panel {
+                padding: 12px;
+            }
+            .compact-panel h3 {
+                margin: 0 0 10px 0;
+                font-size: 16px;
+            }
+            .compact-form {
+                display: flex;
+                gap: 10px 12px;
+                flex-wrap: wrap;
+                align-items: flex-end;
+            }
+            .compact-form-field {
+                flex: 0 1 170px;
+                min-width: 120px;
+            }
+            .compact-form-field.wide {
+                flex-basis: 230px;
+            }
+            .compact-form-field label {
+                display: inline-block;
+                margin-bottom: 4px;
+                font-size: 13px;
+            }
+            .compact-form-field input[type="date"],
+            .compact-form-field input[type="number"],
+            .compact-form-field input[type="text"],
+            .compact-form-field input[type="email"],
+            .compact-form-field select {
+                padding: 6px 8px;
+                font-size: 13px;
+            }
+            .compact-form-flag {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-bottom: 6px;
+            }
+            .compact-form-flag label {
+                margin: 0;
+                font-size: 13px;
+            }
+            .compact-form-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                padding-bottom: 2px;
+            }
+            .compact-form-actions .btn {
+                padding: 7px 11px;
+                font-size: 13px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center">
+                <div>
+                    <div style="font-weight: 700; font-size: 18px">Alquiler de Películas</div>
+                    <div style="font-size: 13px; opacity: 0.85">Versión didáctica para alumnos</div>
+                </div>
+                <nav>
+                    <a href="{% url 'tienda:index' %}">Inicio</a>
+                    {% if perms.tienda.view_categoria or not user.is_authenticated %}
+                        <a href="{% url 'tienda:categoria_list' %}">Categorías</a>
+                    {% endif %}
+                    {% if perms.tienda.view_pelicula or not user.is_authenticated %}
+                        <a href="{% url 'tienda:pelicula_list' %}">Películas</a>
+                    {% endif %}
+                    {% if perms.tienda.view_cliente or not user.is_authenticated %}
+                        <a href="{% url 'tienda:cliente_list' %}">Clientes</a>
+                    {% endif %}
+                    {% if perms.tienda.view_metodopago or not user.is_authenticated %}
+                        <a href="{% url 'tienda:metodo_pago_list' %}">Métodos pago</a>
+                    {% endif %}
+                    {% if perms.tienda.view_alquiler or not user.is_authenticated %}
+                        <a href="{% url 'tienda:alquiler_list' %}">Alquileres</a>
+                    {% endif %}
+                    {% if perms.tienda.view_alquiler or not user.is_authenticated %}
+                        <a href="{% url 'tienda:ventas_list' %}">Ventas</a>
+                    {% endif %}
+                    {% if user.is_authenticated and perms.tienda.change_categoria %}
+                        <a href="{% url 'tienda:papelera_list' %}">Papelera</a>
+                    {% endif %}
+                    {% if user.is_authenticated and perms.tienda.view_actionaudit %}
+                        <a href="{% url 'tienda:auditoria_list' %}">Auditoría</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+        <div class="container">
+            {% if messages %}
+                <div style="margin-bottom: 12px;">
+                    {% for message in messages %}
+                        <div
+                            class="card"
+                            style="
+                                margin-bottom: 8px;
+                                {% if message.tags == 'success' %}
+                                    border-color: #86efac; background: #f0fdf4;
+                                {% elif message.tags == 'warning' %}
+                                    border-color: #fcd34d; background: #fffbeb;
+                                {% elif message.tags == 'error' %}
+                                    border-color: #fca5a5; background: #fef2f2;
+                                {% endif %}
+                            "
+                        >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if breadcrumbs and breadcrumbs|length > 1 %}
+                <div class="card" style="padding: 8px 12px; margin-bottom: 12px;">
+                    {% for crumb in breadcrumbs %}
+                        {% if forloop.first %}
+                            <span class="help">Ruta:</span>
+                        {% else %}
+                            <span class="help"> / </span>
+                        {% endif %}
+                        {% if crumb.url %}
+                            <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+                        {% else %}
+                            <span>{{ crumb.label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
+

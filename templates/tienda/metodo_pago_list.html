@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Métodos de pago - Alquiler de Películas{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Métodos de pago</h2>
+            <a class="btn" href="{% url 'tienda:metodo_pago_create' %}">Nuevo método</a>
+        </div>
+        <div style="margin-top: 12px">
+            {% include "tienda/_list_controls.html" %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th style="width: 220px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for metodo in metodos_pago %}
+                        <tr>
+                            <td>{{ metodo.nombre }}</td>
+                            <td>{{ metodo.descripcion|default_if_none:"" }}</td>
+                            <td class="actions">
+                                <a class="btn secondary" href="{% url 'tienda:metodo_pago_update' metodo.pk %}?next={{ request.get_full_path|urlencode }}">Editar</a>
+                                <a class="btn danger" href="{% url 'tienda:metodo_pago_delete' metodo.pk %}?next={{ request.get_full_path|urlencode }}">Borrar</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="help">No hay métodos de pago todavía.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

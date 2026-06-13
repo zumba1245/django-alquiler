@@ -1,0 +1,53 @@
+{% load querystring %}
+
+<div class="list-toolbar">
+    <form method="get" class="list-toolbar-form">
+        {% for key, value in request.GET.items %}
+            {% if key != "order" and key != "per_page" and key != "page" %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}" />
+            {% endif %}
+        {% endfor %}
+
+        {% if ordering_fields %}
+            <div class="list-toolbar-group" style="flex: 1 1 560px;">
+                <div class="toolbar-label">Orden</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                    {% for field in ordering_fields %}
+                        <a class="btn secondary" href="?{% querystring request order=field page=1 %}" style="padding: 6px 8px;">{{ field }}</a>
+                        <a class="btn secondary" href="?{% querystring request order='-'|add:field page=1 %}" style="padding: 6px 8px;">-{{ field }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="list-toolbar-group compact">
+            <label class="toolbar-label" for="id_per_page">Por página</label>
+            <select id="id_per_page" name="per_page" class="toolbar-select">
+                {% for size in per_page_options %}
+                    <option value="{{ size }}" {% if current_per_page|stringformat:"s" == size|stringformat:"s" %}selected{% endif %}>
+                        {{ size }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="toolbar-actions">
+            <button type="submit" class="btn">Aplicar</button>
+            <a class="btn secondary" href="?{% querystring request order=None per_page=None page=None %}">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+{% if is_paginated %}
+    <div class="pagination-bar">
+        <div class="pagination-status">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-actions">
+            {% if page_obj.has_previous %}
+                <a class="btn secondary" href="?{% querystring request page=page_obj.previous_page_number %}">Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a class="btn secondary" href="?{% querystring request page=page_obj.next_page_number %}">Siguiente</a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

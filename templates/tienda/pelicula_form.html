@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Películas - Formulario{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">
+            {% if form.instance.pk %}Editar película{% else %}Nueva película{% endif %}
+        </h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}" />{% endif %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Guardar</button>
+            {% if request.GET.next %}
+                <a class="btn secondary" href="{{ request.GET.next }}" style="margin-left: 8px">Cancelar</a>
+            {% else %}
+                <a class="btn secondary" href="{% url 'tienda:pelicula_list' %}" style="margin-left: 8px">Cancelar</a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+

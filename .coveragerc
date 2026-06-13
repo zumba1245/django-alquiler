@@ -1,0 +1,20 @@
+[run]
+branch = True
+source =
+    tienda
+    alquiler_site
+omit =
+    */migrations/*
+    */tests.py
+    */__init__.py
+    manage.py
+    */asgi.py
+    */wsgi.py
+
+[report]
+fail_under = 70
+show_missing = True
+skip_covered = True
+
+[html]
+directory = htmlcov

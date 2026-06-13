@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Inicio - Alquiler de Películas{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="card">
+            <div style="font-size: 14px; color: #6b7280">Películas</div>
+            <div style="font-size: 28px; font-weight: 700">{{ total_peliculas }}</div>
+        </div>
+        <div class="card">
+            <div style="font-size: 14px; color: #6b7280">Clientes</div>
+            <div style="font-size: 28px; font-weight: 700">{{ total_clientes }}</div>
+        </div>
+        <div class="card">
+            <div style="font-size: 14px; color: #6b7280">Alquileres pendientes</div>
+            <div style="font-size: 28px; font-weight: 700">{{ alquileres_pendientes }}</div>
+        </div>
+        <div class="card">
+            <div style="font-size: 14px; color: #6b7280">Ingresos (ventas)</div>
+            <div style="font-size: 28px; font-weight: 700">{{ ingresos|soles }}</div>
+        </div>
+        <div class="card">
+            <div style="font-size: 14px; color: #6b7280">Ticket promedio (pagados)</div>
+            <div style="font-size: 28px; font-weight: 700">{{ ticket_promedio|soles }}</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Acciones rápidas</h2>
+        <div class="actions">
+            <a class="btn" href="{% url 'tienda:categoria_create' %}">Nueva categoría</a>
+            <a class="btn" href="{% url 'tienda:pelicula_create' %}" style="background: #16a34a">Nueva película</a>
+            <a class="btn" href="{% url 'tienda:cliente_create' %}" style="background: #8b5cf6">Nuevo cliente</a>
+            <a class="btn" href="{% url 'tienda:metodo_pago_create' %}" style="background: #0ea5e9">Nuevo método pago</a>
+            <a class="btn" href="{% url 'tienda:alquiler_create' %}" style="background: #f59e0b">Nuevo alquiler</a>
+            {% if can_simular_ventas %}
+                <a class="btn secondary" href="{% url 'tienda:ventas_simular' %}">Simular ventas</a>
+            {% endif %}
+        </div>
+        <p class="help" style="margin-bottom: 0">
+            En esta versión, una “venta” es un <b>alquiler marcado como pagado</b>.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Top 10 películas más alquiladas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Película</th>
+                    <th>Total alquileres</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for peli in top_peliculas %}
+                    <tr>
+                        <td>{{ peli.titulo }} ({{ peli.anio }})</td>
+                        <td>{{ peli.total_alquileres }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2" class="help">No hay alquileres todavía.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Ingresos por categoría</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Total ingresos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in ingresos_por_categoria %}
+                    <tr>
+                        <td>{{ fila.pelicula__categoria__nombre }}</td>
+                        <td>{{ fila.total|soles }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2" class="help">No hay ventas pagadas todavía.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Clientes sin alquileres</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes_sin_alquileres %}
+                    <tr>
+                        <td>{{ cliente.nombre }}</td>
+                        <td>{{ cliente.dni }}</td>
+                        <td>{{ cliente.email|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="help">No hay clientes sin alquileres.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Alquileres vencidos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha alquiler</th>
+                    <th>Cliente</th>
+                    <th>Película</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alquiler in alquileres_vencidos %}
+                    <tr>
+                        <td>{{ alquiler.fecha_alquiler }}</td>
+                        <td>{{ alquiler.cliente.nombre }}</td>
+                        <td>{{ alquiler.pelicula.titulo }} ({{ alquiler.pelicula.anio }})</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="help">No hay alquileres vencidos.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top: 0">Ranking mensual de clientes por gasto total ({{ ranking_mensual_mes|date:"F Y" }})</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Total gastado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in ranking_mensual_clientes %}
+                    <tr>
+                        <td>{{ fila.cliente__nombre }}</td>
+                        <td>{{ fila.total_gastado|soles }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2" class="help">No hay ventas pagadas en el mes actual.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

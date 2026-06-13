@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Desactivar película{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Desactivar película</h2>
+        <p>¿Seguro que quieres desactivar <b>{{ object }}</b>?</p>
+        <p class="help">Se ocultará de los listados, pero podrás restaurarla desde la papelera.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}" />{% endif %}
+            <button class="btn danger" type="submit">Desactivar</button>
+            {% if next_url %}
+                <a class="btn secondary" href="{{ next_url }}" style="margin-left: 8px">Cancelar</a>
+            {% else %}
+                <a class="btn secondary" href="{% url 'tienda:pelicula_list' %}" style="margin-left: 8px">Cancelar</a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+

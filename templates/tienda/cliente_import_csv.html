@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Importar clientes desde CSV{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Importar clientes desde CSV</h2>
+        <p class="help" style="margin-top: 0">
+            Formato esperado: columnas <strong>nombre,dni</strong> y opcionales <strong>email,telefono</strong>.
+        </p>
+
+        {% if resumen %}
+            <div class="card" style="background: #f0fdf4; border-color: #bbf7d0">
+                <strong>Importación completada</strong><br />
+                Creados: {{ resumen.creados }}<br />
+                Actualizados: {{ resumen.actualizados }}<br />
+                Omitidos: {{ resumen.omitidos }}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <p>
+                {{ form.csv_file.label_tag }}<br />
+                {{ form.csv_file }}<br />
+                <span class="help">{{ form.csv_file.help_text }}</span>
+                {{ form.csv_file.errors }}
+            </p>
+            <p>
+                {{ form.actualizar_existentes }}
+                {{ form.actualizar_existentes.label_tag }}<br />
+                <span class="help">{{ form.actualizar_existentes.help_text }}</span>
+                {{ form.actualizar_existentes.errors }}
+            </p>
+            <button class="btn" type="submit">Importar</button>
+            <a class="btn secondary" href="{% url 'tienda:cliente_list' %}" style="margin-left: 8px">Volver</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load soles %}
+
+{% block title %}Alquileres{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Alquileres</h2>
+            <a class="btn" href="{% url 'tienda:alquiler_create' %}">Nuevo alquiler</a>
+        </div>
+
+        <div style="margin-top: 12px; margin-bottom: 12px">
+            <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}">Todos</a>
+            <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}?estado=pendiente">Pendientes</a>
+            <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}?estado=pagado">Pagados</a>
+            <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}?estado=anulado">Anulados</a>
+        </div>
+
+        <div class="card compact-panel" style="margin-bottom: 12px;">
+            <h3>Búsqueda avanzada de alquileres</h3>
+            <form method="get" class="compact-form">
+                <div class="compact-form-field">
+                    {{ search_form.cliente.label_tag }}<br />
+                    {{ search_form.cliente }}
+                </div>
+                <div class="compact-form-field wide">
+                    {{ search_form.pelicula.label_tag }}<br />
+                    {{ search_form.pelicula }}
+                </div>
+                <div class="compact-form-field">
+                    {{ search_form.categoria.label_tag }}<br />
+                    {{ search_form.categoria }}
+                </div>
+                <div class="compact-form-field" style="flex-basis: 100px;">
+                    {{ search_form.estado.label_tag }}<br />
+                    {{ search_form.estado }}
+                </div>
+                <div class="compact-form-field" style="flex-basis: 130px;">
+                    {{ search_form.fecha_desde.label_tag }}<br />
+                    {{ search_form.fecha_desde }}
+                </div>
+                <div class="compact-form-field" style="flex-basis: 130px;">
+                    {{ search_form.fecha_hasta.label_tag }}<br />
+                    {{ search_form.fecha_hasta }}
+                </div>
+                <div class="compact-form-field" style="flex-basis: 120px;">
+                    {{ search_form.precio_min.label_tag }}<br />
+                    {{ search_form.precio_min }}
+                </div>
+                <div class="compact-form-field" style="flex-basis: 120px;">
+                    {{ search_form.precio_max.label_tag }}<br />
+                    {{ search_form.precio_max }}
+                </div>
+                <div class="compact-form-flag">
+                    {{ search_form.solo_vencidos }} {{ search_form.solo_vencidos.label_tag }}
+                </div>
+                <div class="compact-form-actions">
+                    <button class="btn" type="submit">Buscar</button>
+                    <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}">Limpiar</a>
+                </div>
+                <div style="flex: 1 1 100%; color: #dc2626;">
+                    {{ search_form.non_field_errors }}
+                </div>
+            </form>
+        </div>
+
+        <div class="card" style="margin-bottom: 12px;">
+            <h3 style="margin-top: 0;">Cobro masivo por ID de alquiler</h3>
+            {% if cobro_ok %}
+                <div style="background: #ecfdf3; border: 1px solid #86efac; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                    Se registró el cobro masivo correctamente. Alquileres cobrados: <b>{{ cobrados|default:"0" }}</b>.
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ bulk_form.as_p }}
+                <button class="btn" type="submit">Aplicar cobro masivo</button>
+            </form>
+        </div>
+
+        <div>
+            {% include "tienda/_list_controls.html" %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Película</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Fecha pago</th>
+                        <th>Método pago</th>
+                        <th>Estado</th>
+                        <th style="width: 220px">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alquiler in alquileres %}
+                        <tr>
+                            <td>{{ alquiler.fecha_alquiler }}</td>
+                            <td>{{ alquiler.cliente.nombre }}</td>
+                            <td>
+                                {{ alquiler.pelicula.titulo }} ({{ alquiler.pelicula.anio }})
+                            </td>
+                            <td>{{ alquiler.pelicula.categoria.nombre }}</td>
+                            <td>{{ alquiler.precio|soles }}</td>
+                            <td>{{ alquiler.fecha_pago|default:"-" }}</td>
+                            <td>{{ alquiler.metodo_pago|default:"-" }}</td>
+                            <td>
+                                {% if alquiler.estado == "pagado" %}
+                                    <b style="color: #16a34a">Pagado</b>
+                                    {% if alquiler.fecha_devolucion %}<div class="help">Devuelto: {{ alquiler.fecha_devolucion }}</div>{% endif %}
+                                {% elif alquiler.estado == "anulado" %}
+                                    <b style="color: #dc2626">Anulado</b>
+                                {% else %}
+                                    <b style="color: #f59e0b">Pendiente</b>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                {% if alquiler.estado == "pendiente" %}
+                                    <a class="btn" href="{% url 'tienda:alquiler_marcar_pagado' alquiler.pk %}?next={{ request.get_full_path|urlencode }}">Marcar pagado</a>
+                                    <form method="post" action="{% url 'tienda:alquiler_anular' alquiler.pk %}" style="display: inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                                        <button class="btn danger" type="submit">Anular</button>
+                                    </form>
+                                {% elif alquiler.estado == "pagado" %}
+                                    <span class="help">Ya cuenta como venta</span>
+                                {% else %}
+                                    <span class="help">Alquiler anulado</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="help">No hay alquileres para mostrar.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+

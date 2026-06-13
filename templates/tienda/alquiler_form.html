@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo alquiler{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2 style="margin-top: 0">Nuevo alquiler</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}" />{% endif %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Crear alquiler</button>
+            {% if request.GET.next %}
+                <a class="btn secondary" href="{{ request.GET.next }}" style="margin-left: 8px">Cancelar</a>
+            {% else %}
+                <a class="btn secondary" href="{% url 'tienda:alquiler_list' %}" style="margin-left: 8px">Cancelar</a>
+            {% endif %}
+        </form>
+        <p class="help" style="margin-bottom: 0; margin-top: 12px">
+            Después podrás marcar el alquiler como pagado para que cuente como una venta.
+        </p>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Auditoría de acciones{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+            <h2 style="margin: 0">Auditoría de acciones recientes</h2>
+        </div>
+
+        <form method="get" style="margin-top: 12px; margin-bottom: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Buscar acción, entidad, usuario..." />
+            <button class="btn" type="submit">Buscar</button>
+            <a class="btn secondary" href="{% url 'tienda:auditoria_list' %}">Limpiar</a>
+        </form>
+
+        {% include "tienda/_list_controls.html" %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Acción</th>
+                    <th>Entidad</th>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in auditorias %}
+                    <tr>
+                        <td>{{ item.created_at }}</td>
+                        <td>{{ item.username|default:"-" }}</td>
+                        <td>{{ item.accion }}</td>
+                        <td>{{ item.entidad }}</td>
+                        <td>{{ item.objeto_id|default:"-" }}</td>
+                        <td>{{ item.descripcion|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="help">No hay acciones registradas.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
